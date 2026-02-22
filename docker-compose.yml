@@ -1,0 +1,53 @@
+services:
+  # ─── MongoDB Database ───
+  mongo:
+    image: mongo:7
+    container_name: waterpurifier-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - waterpurifier-net
+
+  # ─── Backend API ───
+  backend:
+    build: ./backend
+    container_name: waterpurifier-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/waterpurifier
+      - JWT_SECRET=aquapure_jwt_secret_key_2024_super_secure
+      - JWT_EXPIRE=7d
+      - WHATSAPP_NUMBER=919999999999
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      - mongo
+    networks:
+      - waterpurifier-net
+
+  # ─── Frontend (Nginx + React) ───
+  frontend:
+    build: ./frontend
+    container_name: waterpurifier-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - waterpurifier-net
+
+volumes:
+  mongo_data:
+  uploads_data:
+
+
+networks:
+  waterpurifier-net:
+    driver: bridge
