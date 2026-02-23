@@ -28,7 +28,8 @@ async def register(user_data: UserRegister, response: Response):
     user = User(
         name=user_data.name,
         email=user_data.email,
-        password=hashed_password
+        password=hashed_password,
+        phone=user_data.phone or ""
     )
     await user.insert()
     

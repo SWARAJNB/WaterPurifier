@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://waterpurifier-backend.onrender.com/api/:path*"
+      "destination": "https://water-purifier-backend.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",

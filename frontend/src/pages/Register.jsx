@@ -21,7 +21,10 @@ export default function Register() {
             toast.success('Account created!');
             navigate('/');
         } catch (err) {
-            toast.error(err.response?.data?.detail || err.response?.data?.message || 'Registration failed');
+            console.error("Registration Error Response:", err.response?.data);
+            const detail = err.response?.data?.detail;
+            const message = err.response?.data?.message;
+            toast.error(detail || message || 'Registration failed');
         } finally { setLoading(false); }
     };
 
