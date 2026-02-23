@@ -8,8 +8,9 @@ from app.models.user import User
 from app.models.product import Product
 # Import other models as created
 
-from app.routers import auth, products, orders
+from app.routers import auth, products, orders, reviews, admin, services, coupons, offers
 from app.models.order import Order
+from app.models.extras import Review, Booking, Service, Coupon, Offer
 
 app = FastAPI(
     title="AquaPure API",
@@ -21,6 +22,11 @@ app = FastAPI(
 app.include_router(auth.router)
 app.include_router(products.router)
 app.include_router(orders.router)
+app.include_router(reviews.router)
+app.include_router(admin.router)
+app.include_router(services.router)
+app.include_router(coupons.router)
+app.include_router(offers.router)
 
 # CORS Middleware
 app.add_middleware(
@@ -30,8 +36,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-from app.models.extras import Review, Booking, Service, Coupon
 
 @app.on_event("startup")
 async def startup_event():
@@ -46,6 +50,7 @@ async def startup_event():
             Booking,
             Service,
             Coupon,
+            Offer
         ]
     )
     print(f"🚀 FastAPI running in {settings.NODE_ENV} mode")
