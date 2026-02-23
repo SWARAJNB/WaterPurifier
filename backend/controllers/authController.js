@@ -9,7 +9,7 @@ const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expires
 const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
 };
 
@@ -27,7 +27,7 @@ exports.register = async (req, res) => {
         res.cookie('token', token, cookieOptions);
 
         sendResponse(res, 201, 'User registered successfully', {
-            _id: user._id, name: user.name, email: user.email, role: user.role
+            _id: user._id, name: user.name, email: user.email, role: user.role, token
         });
     } catch (error) {
         if (error.name === 'ZodError') return sendResponse(res, 400, error.errors[0].message);
@@ -49,7 +49,7 @@ exports.login = async (req, res) => {
         res.cookie('token', token, cookieOptions);
 
         sendResponse(res, 200, 'Login successful', {
-            _id: user._id, name: user.name, email: user.email, role: user.role, avatar: user.avatar
+            _id: user._id, name: user.name, email: user.email, role: user.role, avatar: user.avatar, token
         });
     } catch (error) {
         if (error.name === 'ZodError') return sendResponse(res, 400, error.errors[0].message);

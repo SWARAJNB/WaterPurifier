@@ -15,12 +15,13 @@ export default function Login() {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data } = await loginUser(form);
-            login(data);
+            const res = await loginUser(form);
+            const userData = res.data.data;
+            login({ ...userData, id: userData._id, token: userData.token });
             toast.success('Welcome back!');
-            navigate(data.role === 'admin' ? '/admin' : '/');
+            navigate(userData.role === 'admin' ? '/admin' : '/');
         } catch (err) {
-            toast.error(err.response?.data?.detail || err.response?.data?.message || 'Login failed');
+            toast.error(err.response?.data?.message || 'Login failed');
         } finally { setLoading(false); }
     };
 
