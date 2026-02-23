@@ -1,19 +1,21 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
+
 export const useAuth = () => useContext(AuthContext);
 
-export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const stored = localStorage.getItem('aquapure_user');
-        if (stored) {
-            try { setUser(JSON.parse(stored)); } catch { localStorage.removeItem('aquapure_user'); }
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(() => {
+        try {
+            const saved = localStorage.getItem('aquapure_user');
+            return saved ? JSON.parse(saved) : null;
+        } catch (e) {
+            console.error("Auth initialization error:", e);
+            localStorage.removeItem('aquapure_user');
+            return null;
         }
-        setLoading(false);
-    }, []);
+    });
+    const [loading, setLoading] = useState(false);
 
     const login = (userData) => {
         setUser(userData);
@@ -26,9 +28,11 @@ export function AuthProvider({ children }) {
     };
 
     const updateUser = (data) => {
-        const updated = { ...user, ...data };
-        setUser(updated);
-        localStorage.setItem('aquapure_user', JSON.stringify(updated));
+        setUser(prev => {
+            const updated = { ...prev, ...data };
+            localStorage.setItem('aquapure_user', JSON.stringify(updated));
+            return updated;
+        });
     };
 
     return (
@@ -36,4 +40,4 @@ export function AuthProvider({ children }) {
             {children}
         </AuthContext.Provider>
     );
-}
+};

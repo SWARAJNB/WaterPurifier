@@ -4,8 +4,12 @@ const API = axios.create({ baseURL: '/api' });
 
 // Attach token to every request
 API.interceptors.request.use((config) => {
-    const user = JSON.parse(localStorage.getItem('aquapure_user') || 'null');
-    if (user?.token) config.headers.Authorization = `Bearer ${user.token}`;
+    try {
+        const user = JSON.parse(localStorage.getItem('aquapure_user') || 'null');
+        if (user?.token) config.headers.Authorization = `Bearer ${user.token}`;
+    } catch (e) {
+        console.error("Token interceptor error:", e);
+    }
     return config;
 });
 

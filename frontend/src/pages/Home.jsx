@@ -9,12 +9,20 @@ import SEO from '../components/SEO';
 export default function Home() {
     const [featured, setFeatured] = useState([]);
     const [bestSellers, setBestSellers] = useState([]);
+    const [loading, setLoading] = useState(true);
     const { addToCart } = useCart();
     const { toggleWishlistItem, isInWishlist } = useWishlist();
 
     useEffect(() => {
-        getProducts({ featured: true, limit: 4 }).then(r => setFeatured(r.data.products)).catch(() => { });
-        getProducts({ bestSeller: true, limit: 4 }).then(r => setBestSellers(r.data.products)).catch(() => { });
+        setLoading(true);
+        getProducts({ featured: true, limit: 4 })
+            .then(res => setFeatured(res.data?.products || res.data || []))
+            .catch(() => { });
+
+        getProducts({ bestSeller: true, limit: 4 })
+            .then(res => setBestSellers(res.data?.products || res.data || []))
+            .catch(() => { })
+            .finally(() => setLoading(false));
     }, []);
 
     const renderStars = (rating) => Array.from({ length: 5 }, (_, i) => (

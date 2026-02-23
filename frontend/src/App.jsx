@@ -20,7 +20,7 @@ import Services from './pages/Services';
 import Contact from './pages/Contact';
 
 // Admin Sub-pages
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminBookings from './pages/AdminBookings';
