@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { FiFilter, FiStar, FiShoppingCart, FiHeart, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { getProducts, getBrands } from '../api';
@@ -139,33 +139,33 @@ export default function Products() {
                         ) : (
                             <>
                                 <div className="products-grid">
-                                    {products.map(product => {
-                                        const discount = product.discountPrice > 0 ? Math.round((1 - product.discountPrice / product.price) * 100) : 0;
+                                    {products?.map(product => {
+                                        const discount = product?.discountPrice > 0 ? Math.round((1 - product.discountPrice / product.price) * 100) : 0;
                                         return (
-                                            <div key={product._id} className="product-card">
-                                                <Link to={`/product/${product._id}`} className="product-card-image">
-                                                    {product.images?.[0] ? <img src={product.images[0]} alt={product.name} loading="lazy" /> : <div className="product-card-placeholder">💧</div>}
+                                            <div key={product?._id} className="product-card">
+                                                <Link to={`/product/${product?._id}`} className="product-card-image">
+                                                    {product?.images?.[0] ? <img src={product.images[0]} alt={product.name} loading="lazy" /> : <div className="product-card-placeholder">💧</div>}
                                                     {discount > 0 && <span className="product-badge badge-sale">{discount}% OFF</span>}
-                                                    {product.bestSeller && <span className="product-badge badge-best" style={{ left: discount > 0 ? 'auto' : 12, right: discount > 0 ? 12 : 'auto', top: discount > 0 ? 42 : 12 }}>Best Seller</span>}
+                                                    {product?.bestSeller && <span className="product-badge badge-best" style={{ left: discount > 0 ? 'auto' : 12, right: discount > 0 ? 12 : 'auto', top: discount > 0 ? 42 : 12 }}>Best Seller</span>}
                                                 </Link>
-                                                <button className={`product-wishlist-btn ${isInWishlist(product._id) ? 'active' : ''}`} onClick={() => toggleWishlistItem(product)}>
-                                                    <FiHeart style={{ fill: isInWishlist(product._id) ? '#ef4444' : 'none' }} />
+                                                <button className={`product-wishlist-btn ${isInWishlist(product?._id) ? 'active' : ''}`} onClick={() => toggleWishlistItem(product)}>
+                                                    <FiHeart style={{ fill: isInWishlist(product?._id) ? '#ef4444' : 'none' }} />
                                                 </button>
                                                 <div className="product-card-body">
-                                                    <div className="product-card-brand">{product.brand}</div>
-                                                    <Link to={`/product/${product._id}`} className="product-card-name">{product.name}</Link>
+                                                    <div className="product-card-brand">{product?.brand}</div>
+                                                    <Link to={`/product/${product?._id}`} className="product-card-name">{product?.name}</Link>
                                                     <div className="product-card-price">
-                                                        <span className="price-current">₹{(product.discountPrice || product.price).toLocaleString()}</span>
-                                                        {product.discountPrice > 0 && <span className="price-original">₹{product.price.toLocaleString()}</span>}
+                                                        <span className="price-current">₹{(product?.discountPrice || product?.price)?.toLocaleString()}</span>
+                                                        {product?.discountPrice > 0 && <span className="price-original">₹{product?.price?.toLocaleString()}</span>}
                                                         {discount > 0 && <span className="price-discount">{discount}% off</span>}
                                                     </div>
                                                     <div className="product-card-rating">
-                                                        <div className="stars">{renderStars(product.rating)}</div>
-                                                        <span className="rating-count">({product.numReviews})</span>
+                                                        <div className="stars">{renderStars(product?.rating)}</div>
+                                                        <span className="rating-count">({product?.numReviews})</span>
                                                     </div>
                                                     <div className="product-card-actions">
                                                         <button className="btn btn-primary btn-sm" onClick={() => addToCart(product)}><FiShoppingCart /> Add to Cart</button>
-                                                        <Link to={`/product/${product._id}`} className="btn btn-secondary btn-sm">View</Link>
+                                                        <Link to={`/product/${product?._id}`} className="btn btn-secondary btn-sm">View</Link>
                                                     </div>
                                                 </div>
                                             </div>

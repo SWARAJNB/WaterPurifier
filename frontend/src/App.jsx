@@ -52,31 +52,24 @@ function App() {
                 </Route>
 
                 {/* Public Site Routes */}
-                <Route path="*" element={
-                    <>
-                        <Header />
-                        <main>
-                            <Routes>
-                                <Route path="/" element={<Home />} />
-                                <Route path="/about" element={<About />} />
-                                <Route path="/products" element={<Products />} />
-                                <Route path="/product/:id" element={<ProductDetail />} />
-                                <Route path="/login" element={<Login />} />
-                                <Route path="/register" element={<Register />} />
-                                <Route path="/forgot-password" element={<ForgotPassword />} />
-                                <Route path="/profile" element={user ? <Profile /> : <Login />} />
-                                <Route path="/cart" element={<Cart />} />
-                                <Route path="/checkout" element={user ? <Checkout /> : <Login />} />
-                                <Route path="/order-success/:id" element={<OrderSuccess />} />
-                                <Route path="/wishlist" element={<Wishlist />} />
-                                <Route path="/compare" element={<Compare />} />
-                                <Route path="/services" element={<Services />} />
-                                <Route path="/contact" element={<Contact />} />
-                            </Routes>
-                        </main>
-                        <Footer />
-                    </>
-                } />
+                <Route path="/" element={<><Header /><main><Home /></main><Footer /></>} />
+                <Route path="/about" element={<><Header /><main><About /></main><Footer /></>} />
+                <Route path="/products" element={<><Header /><main><Products /></main><Footer /></>} />
+                <Route path="/product/:id" element={<><Header /><main><ProductDetail /></main><Footer /></>} />
+                <Route path="/login" element={<><Header /><main><Login /></main><Footer /></>} />
+                <Route path="/register" element={<><Header /><main><Register /></main><Footer /></>} />
+                <Route path="/forgot-password" element={<><Header /><main><ForgotPassword /></main><Footer /></>} />
+                <Route path="/profile" element={user ? <><Header /><main><Profile /></main><Footer /></> : <Navigate to="/login" />} />
+                <Route path="/cart" element={<><Header /><main><Cart /></main><Footer /></>} />
+                <Route path="/checkout" element={user ? <><Header /><main><Checkout /></main><Footer /></> : <Navigate to="/login" />} />
+                <Route path="/order-success/:id" element={<><Header /><main><OrderSuccess /></main><Footer /></>} />
+                <Route path="/wishlist" element={<><Header /><main><Wishlist /></main><Footer /></>} />
+                <Route path="/compare" element={<><Header /><main><Compare /></main><Footer /></>} />
+                <Route path="/services" element={<><Header /><main><Services /></main><Footer /></>} />
+                <Route path="/contact" element={<><Header /><main><Contact /></main><Footer /></>} />
+
+                {/* Catch-all redirect to Home */}
+                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </>
     );

@@ -190,7 +190,7 @@ export default function Home() {
                         <h2 className="section-title">Best Sellers</h2>
                         <p className="section-subtitle">Our most popular water purifiers loved by thousands of customers</p>
                         <div className="products-grid">
-                            {bestSellers.map(p => <ProductCard key={p._id} product={p} />)}
+                            {bestSellers?.map(p => <ProductCard key={p._id} product={p} />)}
                         </div>
                     </div>
                 </section>

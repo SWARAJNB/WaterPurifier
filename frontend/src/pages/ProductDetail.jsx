@@ -159,18 +159,18 @@ export default function ProductDetail() {
                         </form>
                     )}
                     <div className="reviews-list" style={{ marginTop: 24 }}>
-                        {reviews.length === 0 ? <p style={{ color: 'var(--gray-500)' }}>No reviews yet. Be the first!</p> :
-                            reviews.map(r => (
-                                <div key={r._id} className="review-card">
+                        {reviews?.length === 0 ? <p style={{ color: 'var(--gray-500)' }}>No reviews yet. Be the first!</p> :
+                            reviews?.map(r => (
+                                <div key={r?._id} className="review-card">
                                     <div className="review-header">
                                         <div className="review-user">
-                                            <div className="review-avatar">{r.user?.name?.[0] || 'U'}</div>
-                                            <div><div className="review-name">{r.user?.name || 'User'}</div><div className="stars" style={{ marginTop: 2 }}>{renderStars(r.rating)}</div></div>
+                                            <div className="review-avatar">{r?.user?.name?.[0] || 'U'}</div>
+                                            <div><div className="review-name">{r?.user?.name || 'User'}</div><div className="stars" style={{ marginTop: 2 }}>{renderStars(r?.rating)}</div></div>
                                         </div>
-                                        <span className="review-date">{new Date(r.createdAt).toLocaleDateString()}</span>
+                                        <span className="review-date">{new Date(r?.createdAt).toLocaleDateString()}</span>
                                     </div>
-                                    {r.title && <p style={{ fontWeight: 600, margin: '8px 0 4px' }}>{r.title}</p>}
-                                    <p className="review-comment">{r.comment}</p>
+                                    {r?.title && <p style={{ fontWeight: 600, margin: '8px 0 4px' }}>{r.title}</p>}
+                                    <p className="review-comment">{r?.comment}</p>
                                 </div>
                             ))}
                     </div>
