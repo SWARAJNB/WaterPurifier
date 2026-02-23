@@ -23,7 +23,12 @@ export function AuthProvider({ children }) {
     const logout = () => {
         setUser(null);
         localStorage.removeItem('aquapure_user');
-        // The backend logout will clear the cookie
+    };
+
+    const updateUser = (data) => {
+        const updated = { ...user, ...data };
+        setUser(updated);
+        localStorage.setItem('aquapure_user', JSON.stringify(updated));
     };
 
     return (
