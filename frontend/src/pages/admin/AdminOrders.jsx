@@ -71,16 +71,16 @@ export default function AdminOrders() {
                                     <td><span style={{ fontWeight: 600, color: '#0284c7' }}>#{order._id.slice(-6).toUpperCase()}</span></td>
                                     <td>
                                         <div style={{ fontWeight: 500 }}>{order.shippingAddress?.name || order.user?.name || 'Customer'}</div>
-                                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{order.user?.email}</div>
+                                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{order.user?.email || 'N/A'}</div>
                                     </td>
-                                    <td>{order.orderItems?.length} items</td>
-                                    <td>₹{order.totalPrice.toLocaleString()}</td>
+                                    <td>{order.orderItems?.length || 0} items</td>
+                                    <td>₹{(order.totalPrice || 0).toLocaleString()}</td>
                                     <td>
-                                        <span className={`status-badge status-${order.status.toLowerCase()}`}>
-                                            {order.status}
+                                        <span className={`status-badge status-${(order.status || 'Pending').toLowerCase()}`}>
+                                            {order.status || 'Pending'}
                                         </span>
                                     </td>
-                                    <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                                    <td>{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}</td>
                                     <td>
                                         <div style={{ display: 'flex', gap: 6 }}>
                                             <select

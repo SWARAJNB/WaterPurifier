@@ -61,16 +61,16 @@ export default function Checkout() {
                             <h3>Order Summary</h3>
                             {cartItems.map(item => (
                                 <div key={item._id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', fontSize: '0.9rem', borderBottom: '1px solid var(--gray-100)' }}>
-                                    <span>{item.name.substring(0, 30)}... × {item.quantity}</span>
-                                    <span style={{ fontWeight: 500 }}>₹{(item.price * item.quantity).toLocaleString()}</span>
+                                    <span>{(item.name || 'Product').substring(0, 30)}... × {item.quantity || 1}</span>
+                                    <span style={{ fontWeight: 500 }}>₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</span>
                                 </div>
                             ))}
-                            <div className="summary-row" style={{ marginTop: 12 }}><span>Subtotal</span><span>₹{subtotal.toLocaleString()}</span></div>
-                            {discount > 0 && <div className="summary-row" style={{ color: 'var(--success)' }}><span>Discount</span><span>−₹{Math.round(discount).toLocaleString()}</span></div>}
-                            <div className="summary-row"><span>GST (18%)</span><span>₹{tax.toLocaleString()}</span></div>
-                            <div className="summary-row"><span>Shipping</span><span>{shipping === 0 ? 'FREE' : `₹${shipping}`}</span></div>
-                            <div className="summary-row total"><span>Total</span><span>₹{total.toLocaleString()}</span></div>
-                            <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginTop: 20 }} disabled={loading}>{loading ? 'Placing Order...' : `Place Order — ₹${total.toLocaleString()}`}</button>
+                            <div className="summary-row" style={{ marginTop: 12 }}><span>Subtotal</span><span>₹{(subtotal || 0).toLocaleString()}</span></div>
+                            {discount > 0 && <div className="summary-row" style={{ color: 'var(--success)' }}><span>Discount</span><span>−₹{Math.round(discount || 0).toLocaleString()}</span></div>}
+                            <div className="summary-row"><span>GST (18%)</span><span>₹{(tax || 0).toLocaleString()}</span></div>
+                            <div className="summary-row"><span>Shipping</span><span>{shipping === 0 ? 'FREE' : `₹${shipping || 0}`}</span></div>
+                            <div className="summary-row total"><span>Total</span><span>₹{(total || 0).toLocaleString()}</span></div>
+                            <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginTop: 20 }} disabled={loading}>{loading ? 'Placing Order...' : `Place Order — ₹${(total || 0).toLocaleString()}`}</button>
                         </div>
                     </div>
                 </form>

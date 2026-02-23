@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiUser, FiMail, FiPhone, FiPackage, FiEdit } from 'react-icons/fi';
@@ -14,8 +15,8 @@ export default function Profile() {
     const [form, setForm] = useState({ name: user?.name || '', phone: user?.phone || '' });
 
     useEffect(() => {
-        getMyOrders().then(r => setOrders(r.data.data || r.data)).catch(() => { });
-        axios.get('/api/services/bookings').then(r => setBookings(r.data.data || r.data)).catch(() => { });
+        getMyOrders().then(r => setOrders(r.data?.data || r.data || [])).catch(() => { });
+        axios.get('/api/services/bookings').then(r => setBookings(r.data?.data || r.data || [])).catch(() => { });
     }, []);
 
     const handleUpdate = async (e) => {

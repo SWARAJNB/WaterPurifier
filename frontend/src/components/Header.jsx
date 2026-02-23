@@ -54,7 +54,7 @@ export default function Header() {
                     {user ? (
                         <div className="user-menu">
                             <button className="user-menu-btn" onClick={() => setUserMenuOpen(!userMenuOpen)}>
-                                <FiUser /> {user.name?.split(' ')[0]}
+                                <FiUser /> {user?.name?.split(' ')[0] || 'User'}
                             </button>
                             {userMenuOpen && (
                                 <div className="user-dropdown" onClick={() => setUserMenuOpen(false)}>
