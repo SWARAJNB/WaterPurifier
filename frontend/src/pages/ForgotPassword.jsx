@@ -14,14 +14,14 @@ export default function ForgotPassword() {
     const handleSendOTP = async (e) => {
         e.preventDefault(); setLoading(true);
         try { await forgotPassword(email); toast.success('OTP sent! Check console for demo'); setStep(2); }
-        catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
+        catch (err) { toast.error(err.response?.data?.detail || err.response?.data?.message || 'Failed'); }
         finally { setLoading(false); }
     };
 
     const handleReset = async (e) => {
         e.preventDefault(); setLoading(true);
         try { await resetPassword({ email, otp, newPassword }); toast.success('Password reset successfully!'); setStep(3); }
-        catch (err) { toast.error(err.response?.data?.message || 'Failed'); }
+        catch (err) { toast.error(err.response?.data?.detail || err.response?.data?.message || 'Failed'); }
         finally { setLoading(false); }
     };
 

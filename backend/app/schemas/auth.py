@@ -16,6 +16,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     role: str
     avatar: Optional[str] = ""
+    token: Optional[str] = None
 
     class Config:
         from_attributes = True

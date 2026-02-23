@@ -89,9 +89,8 @@ export default function AdminProducts() {
             setModal(null);
             loadProducts();
             resetForm();
-        } catch (err) {
-            toast.error(err.response?.data?.message || 'Action failed');
-        } finally {
+        } catch (err) { toast.error(err.response?.data?.detail || err.response?.data?.message || 'Save failed'); }
+        finally {
             setSaving(false);
         }
     };

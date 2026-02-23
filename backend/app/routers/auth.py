@@ -39,7 +39,8 @@ async def register(user_data: UserRegister, response: Response):
         "id": str(user.id),
         "name": user.name,
         "email": user.email,
-        "role": user.role
+        "role": user.role,
+        "token": token
     }
 
 @router.post("/login")
@@ -56,7 +57,8 @@ async def login(user_data: UserLogin, response: Response):
         "name": user.name,
         "email": user.email,
         "role": user.role,
-        "avatar": user.avatar
+        "avatar": user.avatar,
+        "token": token
     }
 
 @router.get("/profile", response_model=UserResponse)

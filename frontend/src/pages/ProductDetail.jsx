@@ -36,7 +36,9 @@ export default function ProductDetail() {
             setReviews(prev => [res.data, ...prev]);
             setReviewForm({ rating: 5, title: '', comment: '' });
             toast.success('Review submitted!');
-        } catch (err) { toast.error(err.response?.data?.message || 'Failed to submit review'); }
+        } catch (err) {
+            toast.error(err.response?.data?.detail || err.response?.data?.message || 'Action failed');
+        }
     };
 
     const renderStars = (rating) => Array.from({ length: 5 }, (_, i) => (

@@ -25,7 +25,7 @@ export default function Checkout() {
             clearCart();
             toast.success('Order placed successfully!');
             navigate(`/order-success/${data._id}`);
-        } catch (err) { toast.error(err.response?.data?.message || 'Order failed'); }
+        } catch (err) { toast.error(err.response?.data?.detail || err.response?.data?.message || 'Order failed'); }
         finally { setLoading(false); }
     };
 

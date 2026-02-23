@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { FiTool, FiSettings, FiCalendar, FiCheckCircle } from 'react-icons/fi';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
 import { useAuth } from '../context/AuthContext';
+import { getServices, bookService } from '../api';
 
 export default function Services() {
     const { user } = useAuth();
@@ -20,17 +20,17 @@ export default function Services() {
     const [fetching, setFetching] = useState(true);
 
     useEffect(() => {
-        const loadServices = async () => {
+        const loadServicesData = async () => {
             try {
-                const res = await axios.get('/api/services');
-                setServices(res.data.data || []);
+                const res = await getServices();
+                setServices(res.data || []);
             } catch {
                 toast.error('Failed to load service plans');
             } finally {
                 setFetching(false);
             }
         };
-        loadServices();
+        loadServicesData();
     }, []);
 
     const handleSubmit = async (e) => {
@@ -38,11 +38,11 @@ export default function Services() {
         if (!user) return toast.error('Please login to book a service');
         setLoading(true);
         try {
-            await axios.post('/api/services/book', form);
+            await bookService(form);
             toast.success('Service booked successfully!');
             setForm({ ...form, issue: '', preferredDate: '' });
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Failed to book');
+            toast.error(err.response?.data?.detail || err.response?.data?.message || 'Failed to book');
         } finally {
             setLoading(false);
         }

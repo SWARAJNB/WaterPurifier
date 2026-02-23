@@ -17,7 +17,7 @@ export default function Cart() {
             const { data } = await validateCoupon({ code: couponCode, cartTotal: subtotal });
             setCoupon({ code: data.code, discount: data.discount, maxDiscount: data.discountAmount });
             toast.success(data.message);
-        } catch (err) { toast.error(err.response?.data?.message || 'Invalid coupon'); }
+        } catch (err) { toast.error(err.response?.data?.detail || err.response?.data?.message || 'Calculation failed'); }
         finally { setCouponLoading(false); }
     };
 

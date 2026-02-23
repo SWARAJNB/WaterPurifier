@@ -26,7 +26,9 @@ export default function Profile() {
             updateUser(data.data || data);
             toast.success('Profile updated!');
             setEditing(false);
-        } catch (err) { toast.error('Update failed'); }
+        } catch (err) {
+            toast.error(err.response?.data?.detail || err.response?.data?.message || 'Update failed');
+        }
     };
 
     const statusClass = (s) => `status-badge status-${s.replace(' ', '').toLowerCase()}`;

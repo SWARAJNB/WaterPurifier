@@ -40,7 +40,8 @@ export const getOrder = (id) => API.get(`/orders/${id}`);
 export const validateCoupon = (data) => API.post('/coupons/validate', data);
 
 // Services & Contact
-export const submitServiceRequest = (data) => API.post('/services', data);
+export const getServices = () => API.get('/services');
+export const bookService = (data) => API.post('/services/book', data);
 export const submitContact = (data) => API.post('/contact', data);
 
 // Admin
