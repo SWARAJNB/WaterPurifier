@@ -37,9 +37,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+import certifi
+
 @app.on_event("startup")
 async def startup_event():
-    client = AsyncIOMotorClient(settings.MONGODB_URI)
+    print(f"📡 Connecting to MongoDB: {settings.MONGODB_URI.split('@')[-1]}") # Log safe part of URI
+    client = AsyncIOMotorClient(
+        settings.MONGODB_URI,
+        tlsCAFile=certifi.where()
+    )
+    try:
+        # Verify connection
+        await client.admin.command('ping')
+        print("✅ Successfully connected to MongoDB Atlas")
+    except Exception as e:
+        print(f"❌ MongoDB Connection Error: {e}")
+        raise e
+
     await init_beanie(
         database=client.get_default_database(),
         document_models=[
