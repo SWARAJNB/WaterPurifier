@@ -4,7 +4,7 @@ from app.routers.auth import get_current_user
 from app.models.user import User
 from datetime import datetime
 
-router = APIRouter(prefix="/api/coupons", tags=["coupons"])
+router = APIRouter(prefix="/coupons", tags=["coupons"])
 
 @router.post("/validate")
 async def validate_coupon(data: dict):

@@ -48,6 +48,7 @@ export const getMyOrders = () => API.get('/orders/myorders');
 export const getOrder = (id) => API.get(`/orders/${id}`);
 export const createRazorpayOrder = (amount) => API.post('/payments/create-order', null, { params: { amount } });
 export const verifyPayment = (data) => API.post('/payments/verify', data);
+export const validateCoupon = (data) => API.post('/coupons/validate', data);
 
 // Company Info
 export const getBusinessInfo = () => API.get('/info');
@@ -55,11 +56,11 @@ export const updateBusinessInfo = (data) => API.put('/info', data);
 
 // Admin
 export const getAdminDashboard = () => API.get('/admin/dashboard');
-export const createAdminProduct = (data) => API.post('/products', data, { headers: { 'Content-Type': 'multipart/form-data' } });
-export const updateAdminProduct = (id, data) => API.put(`/products/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
-export const deleteAdminProduct = (id) => API.delete(`/products/${id}`);
+export const createProduct = (data) => API.post('/products', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const updateProduct = (id, data) => API.put(`/products/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const deleteProduct = (id) => API.delete(`/products/${id}`);
 export const getAdminOrders = () => API.get('/orders');
-export const updateAdminOrderStatus = (id, status) => API.put(`/orders/${id}/status`, { status });
+export const updateOrderStatus = (id, status) => API.put(`/orders/${id}/status`, { status });
 export const getAdminServices = () => API.get('/services');
 
 export default API;
