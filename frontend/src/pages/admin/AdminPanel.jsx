@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { getProducts, getServices, getBusinessInfo, updateBusinessInfo, createAdminProduct, updateAdminProduct, deleteAdminProduct } from '../../api';
+import { getProducts, getServices, getBusinessInfo, updateBusinessInfo, createProduct, updateProduct, deleteProduct } from '../../api';
 import toast from 'react-hot-toast';
 import { FiPackage, FiSettings, FiInfo, FiPlus, FiEdit, FiTrash2, FiExternalLink } from 'react-icons/fi';
 

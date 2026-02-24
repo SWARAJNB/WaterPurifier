@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FiEye, FiCheckCircle, FiTruck, FiXCircle } from 'react-icons/fi';
-import { getAdminOrders, updateOrderStatus } from '../../api';
+import { getAllOrders, updateOrderStatus } from '../../api';
 import toast from 'react-hot-toast';
 
 export default function AdminOrders() {
@@ -13,7 +13,7 @@ export default function AdminOrders() {
     const loadOrders = async () => {
         setLoading(true);
         try {
-            const res = await getAdminOrders();
+            const res = await getAllOrders();
             setOrders(res.data.data.orders || res.data.orders || res.data);
         } catch {
             toast.error('Failed to load orders');

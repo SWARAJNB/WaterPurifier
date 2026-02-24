@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiHome, FiPackage, FiShoppingCart, FiUsers, FiX, FiLogOut, FiMenu } from 'react-icons/fi';
-import { getAdminUsers } from '../../api';
+import { getAllUsers } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AdminUsers() {
@@ -11,7 +11,7 @@ export default function AdminUsers() {
     const { logout } = useAuth();
     const location = useLocation();
 
-    useEffect(() => { getAdminUsers().then(r => setUsers(r.data)).catch(() => { }).finally(() => setLoading(false)); }, []);
+    useEffect(() => { getAllUsers().then(r => setUsers(r.data)).catch(() => { }).finally(() => setLoading(false)); }, []);
 
     const navItems = [
         { path: '/admin', icon: <FiHome />, label: 'Dashboard' },

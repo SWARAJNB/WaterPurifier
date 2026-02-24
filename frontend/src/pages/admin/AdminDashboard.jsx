@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiHome, FiPackage, FiShoppingCart, FiUsers, FiTrendingUp, FiDollarSign, FiAlertTriangle, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
-import { getAdminDashboard } from '../../api';
+import { getDashboardStats } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AdminDashboard() {
@@ -12,7 +12,7 @@ export default function AdminDashboard() {
     const location = useLocation();
 
     useEffect(() => {
-        getAdminDashboard().then(r => setStats(r.data)).catch(() => { }).finally(() => setLoading(false));
+        getDashboardStats().then(r => setStats(r.data)).catch(() => { }).finally(() => setLoading(false));
     }, []);
 
     const navItems = [
