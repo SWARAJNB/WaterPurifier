@@ -17,8 +17,8 @@ export default function Register() {
         setLoading(true);
         try {
             const res = await registerUser(form);
-            const userData = res.data.data;
-            login({ ...userData, id: userData._id, token: userData.token });
+            const userData = res.data;
+            login({ ...userData, id: userData.id || userData._id, token: userData.token });
             toast.success('Account created!');
             navigate('/');
         } catch (err) {

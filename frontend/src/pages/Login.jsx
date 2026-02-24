@@ -16,10 +16,10 @@ export default function Login() {
         setLoading(true);
         try {
             const res = await loginUser(form);
-            const userData = res.data.data;
-            login({ ...userData, id: userData._id, token: userData.token });
+            const userData = res.data;
+            login({ ...userData, id: userData.id || userData._id, token: userData.token });
             toast.success('Welcome back!');
-            navigate(userData.role === 'admin' ? '/admin' : '/');
+            navigate(userData.role === 'admin' ? '/admin-panel' : '/');
         } catch (err) {
             toast.error(err.response?.data?.message || 'Login failed');
         } finally { setLoading(false); }

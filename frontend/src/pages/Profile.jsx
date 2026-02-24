@@ -1,9 +1,8 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiUser, FiMail, FiPhone, FiPackage, FiEdit } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
-import { getMyOrders, updateProfile } from '../api';
+import { getMyOrders, updateProfile, getUserBookings } from '../api';
 import toast from 'react-hot-toast';
 
 export default function Profile() {
@@ -16,7 +15,7 @@ export default function Profile() {
 
     useEffect(() => {
         getMyOrders().then(r => setOrders(r.data?.data || r.data || [])).catch(() => { });
-        axios.get('/api/services/bookings').then(r => setBookings(r.data?.data || r.data || [])).catch(() => { });
+        getUserBookings().then(r => setBookings(r.data || [])).catch(() => { });
     }, []);
 
     const handleUpdate = async (e) => {

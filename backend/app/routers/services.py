@@ -23,6 +23,10 @@ async def book_service(booking_data: dict, user: User = Depends(get_current_user
     await booking.insert()
     return booking
 
+@router.get("/my-bookings")
+async def get_my_bookings(user: User = Depends(get_current_user)):
+    return await Booking.find(Booking.user == str(user.id)).sort("-created_at").to_list()
+
 @router.get("/bookings")
 async def get_bookings(user: User = Depends(get_current_user)):
     if user.role != "admin":

@@ -17,6 +17,8 @@ API.interceptors.request.use((config) => {
 export const registerUser = (data) => API.post('/auth/register', data);
 export const loginUser = (data) => API.post('/auth/login', data);
 export const logoutUser = () => API.post('/auth/logout');
+export const forgotPassword = (email) => API.post('/auth/forgot-password', { email });
+export const resetPassword = (data) => API.post('/auth/reset-password', data);
 
 // User Profile, Cart & Wishlist
 export const getProfile = () => API.get('/user/profile');
@@ -33,6 +35,7 @@ export const getBrands = () => API.get('/products/brands');
 // Services
 export const getServices = () => API.get('/services');
 export const bookService = (data) => API.post('/services/book', data);
+export const getUserBookings = () => API.get('/services/my-bookings');
 export const submitContact = (data) => API.post('/info/contact', data);
 
 // Reviews
