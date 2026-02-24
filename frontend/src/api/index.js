@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+// Base URL pulled from environment; ensure it ends with "/api/v1" for router prefix
+let API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
+// if user forgot to include /api/v1 in the env variable, add it automatically
+if (!API_BASE_URL.endsWith('/api/v1')) {
+    API_BASE_URL = API_BASE_URL.replace(/\/+$/, ''); // trim trailing slash
+    API_BASE_URL += '/api/v1';
+}
 
 const API = axios.create({ 
     baseURL: API_BASE_URL,
