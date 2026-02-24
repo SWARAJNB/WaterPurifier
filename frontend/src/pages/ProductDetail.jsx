@@ -19,11 +19,12 @@ export default function ProductDetail() {
     const { addToCart } = useCart();
     const { toggleWishlistItem, isInWishlist } = useWishlist();
     const { user } = useAuth();
+    const [info, setInfo] = useState(null);
 
     useEffect(() => {
         setLoading(true);
-        Promise.all([getProduct(id), getReviews(id)])
-            .then(([pRes, rRes]) => { setProduct(pRes.data); setReviews(rRes.data); })
+        Promise.all([getProduct(id), getReviews(id), getBusinessInfo()])
+            .then(([pRes, rRes, iRes]) => { setProduct(pRes.data); setReviews(rRes.data); setInfo(iRes.data); })
             .catch(() => toast.error('Failed to load product'))
             .finally(() => setLoading(false));
     }, [id]);

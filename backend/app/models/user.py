@@ -1,6 +1,6 @@
 from typing import Optional, List
 from beanie import Document, Indexed
-from pydantic import EmailStr, Field
+from pydantic import EmailStr, Field, BaseModel
 from datetime import datetime
 from passlib.context import CryptContext
 
@@ -16,6 +16,11 @@ class Address(Document):
     country: str = "India"
     isDefault: bool = False
 
+class CartItem(BaseModel):
+    product: str # Product ID
+    quantity: int = 1
+    added_at: datetime = Field(default_factory=datetime.utcnow)
+
 class User(Document):
     name: str
     email: Indexed(EmailStr, unique=True)
@@ -25,6 +30,8 @@ class User(Document):
     avatar: str = ""
     addresses: List[Address] = []
     wishlist: List[str] = [] # List of Product IDs
+    cart: List[CartItem] = []
+    saved_for_later: List[CartItem] = []
     resetPasswordOTP: Optional[str] = None
     resetPasswordExpire: Optional[datetime] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)

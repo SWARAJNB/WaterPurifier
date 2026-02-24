@@ -1,8 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { createOrder } from '../api';
+import { createOrder, createRazorpayOrder, verifyPayment } from '../api';
 import toast from 'react-hot-toast';
+
+const loadRazorpay = () => {
+    return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+    });
+};
 
 export default function Checkout() {
     const { cartItems, subtotal, discount, shipping, tax, total, coupon, clearCart } = useCart();
@@ -15,18 +25,65 @@ export default function Checkout() {
         e.preventDefault();
         if (cartItems.length === 0) return toast.error('Cart is empty');
         setLoading(true);
+
         try {
-            const { data } = await createOrder({
-                orderItems: cartItems.map(i => ({ product: i._id, quantity: i.quantity })),
-                shippingAddress: address,
-                paymentMethod: payment,
-                couponCode: coupon?.code || ''
-            });
-            clearCart();
-            toast.success('Order placed successfully!');
-            navigate(`/order-success/${data._id}`);
-        } catch (err) { toast.error(err.response?.data?.detail || err.response?.data?.message || 'Order failed'); }
-        finally { setLoading(false); }
+            if (payment === 'Online') {
+                const res = await loadRazorpay();
+                if (!res) return toast.error('Razorpay SDK failed to load');
+
+                const { data: razorOrder } = await createRazorpayOrder(total);
+
+                const options = {
+                    key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+                    amount: razorOrder.amount,
+                    currency: razorOrder.currency,
+                    name: 'AquaPure',
+                    description: 'Water Purifier Purchase',
+                    order_id: razorOrder.id,
+                    handler: async (response) => {
+                        try {
+                            await verifyPayment({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature
+                            });
+
+                            // Create actual order in DB after payment verification
+                            const { data } = await createOrder({
+                                orderItems: cartItems.map(i => ({ product: i._id, quantity: i.quantity })),
+                                shippingAddress: address,
+                                paymentMethod: 'Online',
+                                paymentInfo: response,
+                                isPaid: true,
+                                totalPrice: total
+                            });
+
+                            clearCart();
+                            toast.success('Payment successful & Order placed!');
+                            navigate(`/order-success/${data._id}`);
+                        } catch (err) { toast.error('Payment verification failed'); }
+                    },
+                    prefill: { name: address.fullName, contact: address.phone },
+                    theme: { color: '#0066cc' }
+                };
+
+                const paymentObject = new window.Razorpay(options);
+                paymentObject.open();
+            } else {
+                // COD Flow
+                const { data } = await createOrder({
+                    orderItems: cartItems.map(i => ({ product: i._id, quantity: i.quantity })),
+                    shippingAddress: address,
+                    paymentMethod: 'COD',
+                    totalPrice: total
+                });
+                clearCart();
+                toast.success('Order placed successfully!');
+                navigate(`/order-success/${data._id}`);
+            }
+        } catch (err) {
+            toast.error(err.response?.data?.detail || err.response?.data?.message || 'Order failed');
+        } finally { setLoading(false); }
     };
 
     return (

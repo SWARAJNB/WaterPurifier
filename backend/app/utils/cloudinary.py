@@ -1,6 +1,7 @@
 import cloudinary
 import cloudinary.uploader
 from app.core.config import settings
+from typing import Optional
 
 cloudinary.config(
     cloud_name=settings.CLOUDINARY_CLOUD_NAME,

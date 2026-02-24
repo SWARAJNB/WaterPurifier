@@ -28,7 +28,7 @@ import AdminServices from './pages/AdminServices';
 import AdminOffers from './pages/AdminOffers';
 
 import { useAuth } from './context/AuthContext';
-import './Admin.css';
+import AdminPanel from './pages/admin/AdminPanel';
 
 function App() {
     const { user, loading } = useAuth();
@@ -40,7 +40,10 @@ function App() {
         <>
             <Toaster position="top-center" toastOptions={{ duration: 3000, style: { borderRadius: '12px', background: '#1a1a2e', color: '#fff', padding: '12px 20px' } }} />
             <Routes>
-                {/* Admin Dashboard Routes */}
+                {/* Simplified Admin route */}
+                <Route path="/admin-panel" element={isAdmin ? <><Header /><main><AdminPanel /></main><Footer /></> : <Navigate to="/login" />} />
+
+                {/* Legacy Admin Dashboard Routes (Keep for now or redirect) */}
                 <Route path="/admin" element={isAdmin ? <AdminLayout /> : <Navigate to="/login" />}>
                     <Route index element={<AdminDashboard />} />
                     <Route path="dashboard" element={<AdminDashboard />} />

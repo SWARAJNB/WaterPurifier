@@ -5,14 +5,18 @@ from app.schemas.auth import UserRegister, UserLogin, UserResponse
 from app.core.security import create_access_token, verify_token
 from typing import List
 
-router = APIRouter(prefix="/api/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login")
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     user_id = verify_token(token)
     if not user_id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail="Session expired or invalid token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     user = await User.get(user_id)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")

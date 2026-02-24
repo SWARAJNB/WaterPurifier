@@ -16,9 +16,18 @@ def create_access_token(subject: Union[str, Any], expires_delta: timedelta = Non
     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET, algorithm=ALGORITHM)
     return encoded_jwt
 
+from jose import jwt, JWTError, ExpiredSignatureError
+
 def verify_token(token: str) -> Optional[str]:
     try:
         decoded_token = jwt.decode(token, settings.JWT_SECRET, algorithms=[ALGORITHM])
         return decoded_token["sub"]
-    except:
+    except ExpiredSignatureError:
+        print("Token has expired")
+        return None
+    except JWTError:
+        print("Invalid token")
+        return None
+    except Exception as e:
+        print(f"Token error: {e}")
         return None

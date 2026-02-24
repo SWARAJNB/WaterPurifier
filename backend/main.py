@@ -6,11 +6,10 @@ from beanie import init_beanie
 from app.core.config import settings
 from app.models.user import User
 from app.models.product import Product
-# Import other models as created
-
-from app.routers import auth, products, orders, reviews, admin, services, coupons, offers
 from app.models.order import Order
 from app.models.extras import Review, Booking, Service, Coupon, Offer
+from app.models.info import BusinessInfo
+from app.api_v1 import api_router
 
 app = FastAPI(
     title="AquaPure API",
@@ -18,15 +17,8 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Include Routers
-app.include_router(auth.router)
-app.include_router(products.router)
-app.include_router(orders.router)
-app.include_router(reviews.router)
-app.include_router(admin.router)
-app.include_router(services.router)
-app.include_router(coupons.router)
-app.include_router(offers.router)
+# Include API V1 Router
+app.include_router(api_router, prefix="/api/v1")
 
 # CORS Middleware
 app.add_middleware(
@@ -64,7 +56,8 @@ async def startup_event():
             Booking,
             Service,
             Coupon,
-            Offer
+            Offer,
+            BusinessInfo
         ]
     )
     print(f"🚀 FastAPI running in {settings.NODE_ENV} mode")

@@ -33,7 +33,7 @@ export default function Header() {
                     <NavLink to="/about" onClick={() => setMenuOpen(false)}>About</NavLink>
                     <NavLink to="/services" onClick={() => setMenuOpen(false)}>Services</NavLink>
                     <NavLink to="/contact" onClick={() => setMenuOpen(false)}>Contact</NavLink>
-                    {isAdmin && <NavLink to="/admin" onClick={() => setMenuOpen(false)}>Admin</NavLink>}
+                    {isAdmin && <NavLink to="/admin-panel" onClick={() => setMenuOpen(false)}>Admin</NavLink>}
                 </nav>
 
                 <form className="header-search" onSubmit={handleSearch}>
@@ -60,7 +60,7 @@ export default function Header() {
                                 <div className="user-dropdown" onClick={() => setUserMenuOpen(false)}>
                                     <Link to="/profile"><FiUser /> My Profile</Link>
                                     <Link to="/profile"><FiPackage /> My Orders</Link>
-                                    {isAdmin && <Link to="/admin"><FiSettings /> Admin Panel</Link>}
+                                    {isAdmin && <Link to="/admin-panel"><FiSettings /> Admin Panel</Link>}
                                     <button onClick={() => { logout(); navigate('/'); }}><FiLogOut /> Logout</button>
                                 </div>
                             )}

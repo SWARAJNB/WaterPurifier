@@ -1,20 +1,22 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File
 from app.models.product import Product
-from app.schemas.product import ProductResponse, ProductCreate, ProductUpdate
+from app.schemas.product import ProductResponse
 from app.routers.auth import get_current_user
 from app.models.user import User
 from typing import List, Optional
+from datetime import datetime
+from app.utils.cloudinary import upload_image, delete_image
 import json
 
-router = APIRouter(prefix="/api/products", tags=["products"])
+router = APIRouter(prefix="/products", tags=["products"])
 
 @router.get("/", response_model=dict)
 async def get_products(
     search: Optional[str] = None,
     brand: Optional[str] = None,
     purifierType: Optional[str] = None,
-    minPrice: Optional[float] = None,
-    maxPrice: Optional[float] = None,
+    minPrice: Optional[float] = Query(None),
+    maxPrice: Optional[float] = Query(None),
     page: int = 1,
     limit: int = 12
 ):
@@ -26,7 +28,13 @@ async def get_products(
     if purifierType:
         query["purifierType"] = {"$in": purifierType.split(",")}
     
-    # Add price filter logic if needed
+    if minPrice is not None or maxPrice is not None:
+        price_query = {}
+        if minPrice is not None:
+            price_query["$gte"] = minPrice
+        if maxPrice is not None:
+            price_query["$lte"] = maxPrice
+        query["price"] = price_query
     
     total = await Product.find(query).count()
     products = await Product.find(query).skip((page - 1) * limit).limit(limit).to_list()
@@ -47,7 +55,7 @@ async def get_product(id: str):
 
 @router.post("/", response_model=ProductResponse)
 async def create_product(
-    product_data: str, # Received as JSON string from form-data
+    product_data: str = File(...), 
     files: List[UploadFile] = File(...),
     user: User = Depends(get_current_user)
 ):
@@ -56,14 +64,55 @@ async def create_product(
     
     try:
         data = json.loads(product_data)
-        validated = ProductCreate(**data)
+        # validated = ProductCreate(**data) # Can use Pydantic validation here
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid product data: {e}")
 
-    # Cloudinary upload logic would go here
-    # images = [upload_image(f.file) for f in files]
-    images = [] # Placeholder
+    images = []
+    for file in files:
+        url = upload_image(file.file)
+        if url:
+            images.append(url)
     
-    product = Product(**validated.dict(), images=images)
+    product = Product(**data, images=images)
     await product.insert()
     return product
+
+@router.put("/{id}", response_model=ProductResponse)
+async def update_product(
+    id: str,
+    product_data: str = File(...),
+    files: Optional[List[UploadFile]] = File(None),
+    user: User = Depends(get_current_user)
+):
+    if user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    product = await Product.get(id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    data = json.loads(product_data)
+    
+    if files:
+        images = []
+        for file in files:
+            url = upload_image(file.file)
+            if url:
+                images.append(url)
+        data["images"] = images
+    
+    await product.update({"$set": {**data, "updated_at": datetime.utcnow()}})
+    return await Product.get(id)
+
+@router.delete("/{id}")
+async def delete_product(id: str, user: User = Depends(get_current_user)):
+    if user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    product = await Product.get(id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    await product.delete()
+    return {"message": "Product deleted successfully"}

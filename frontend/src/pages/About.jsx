@@ -1,8 +1,19 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiDroplet, FiShield, FiAward, FiUsers, FiTarget, FiGlobe } from 'react-icons/fi';
 import SEO from '../components/SEO';
+import { getBusinessInfo } from '../api';
 
 export default function About() {
+    const [info, setInfo] = useState(null);
+
+    useEffect(() => {
+        getBusinessInfo().then(res => setInfo(res.data)).catch(err => console.error(err));
+    }, []);
+
+    const vision = info?.vision || "To provide every Indian family access to pure, safe, and mineral-rich drinking water through affordable, advanced water purification technology.";
+    const mission = info?.mission || "To become India's #1 water purifier marketplace and contribute to eradicating waterborne diseases by 2030.";
+    const description = info?.description || "AquaPure was founded with a simple yet powerful mission — to make safe, pure drinking water accessible to every Indian household. Starting as a small local shop in 2015, we've grown into one of India's most trusted online platforms for water purifiers.";
     return (
         <>
             <SEO
@@ -25,7 +36,7 @@ export default function About() {
             <section className="section">
                 <div className="container">
                     <div className="about-content">
-                        <div><h2>Our Story</h2><p>AquaPure was founded with a simple yet powerful mission — to make safe, pure drinking water accessible to every Indian household. Starting as a small local shop in 2015, we've grown into one of India's most trusted online platforms for water purifiers.</p><p>We partner with all major brands including Kent, Aquaguard, Pureit, Livpure, AO Smith, and more to bring you genuine products at the best prices, backed by professional installation and after-sales service.</p></div>
+                        <div><h2>Our Story</h2><p>{description}</p><p>We partner with all major brands including Kent, Aquaguard, Pureit, Livpure, AO Smith, and more to bring you genuine products at the best prices, backed by professional installation and after-sales service.</p></div>
                         <div className="about-image">💧</div>
                     </div>
                 </div>
@@ -34,8 +45,8 @@ export default function About() {
                 <div className="container">
                     <h2 className="section-title">Our Mission & Vision</h2>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, marginTop: 40 }}>
-                        <div style={{ padding: 32, background: 'var(--accent)', borderRadius: 'var(--radius-lg)' }}><FiTarget style={{ fontSize: '2rem', color: 'var(--primary)', marginBottom: 12 }} /><h3 style={{ marginBottom: 8 }}>Mission</h3><p style={{ color: 'var(--gray-700)', lineHeight: 1.7 }}>To provide every Indian family access to pure, safe, and mineral-rich drinking water through affordable, advanced water purification technology.</p></div>
-                        <div style={{ padding: 32, background: 'var(--accent)', borderRadius: 'var(--radius-lg)' }}><FiGlobe style={{ fontSize: '2rem', color: 'var(--primary)', marginBottom: 12 }} /><h3 style={{ marginBottom: 8 }}>Vision</h3><p style={{ color: 'var(--gray-700)', lineHeight: 1.7 }}>To become India's #1 water purifier marketplace and contribute to eradicating waterborne diseases by 2030.</p></div>
+                        <div style={{ padding: 32, background: 'var(--accent)', borderRadius: 'var(--radius-lg)' }}><FiTarget style={{ fontSize: '2rem', color: 'var(--primary)', marginBottom: 12 }} /><h3 style={{ marginBottom: 8 }}>Mission</h3><p style={{ color: 'var(--gray-700)', lineHeight: 1.7 }}>{mission}</p></div>
+                        <div style={{ padding: 32, background: 'var(--accent)', borderRadius: 'var(--radius-lg)' }}><FiGlobe style={{ fontSize: '2rem', color: 'var(--primary)', marginBottom: 12 }} /><h3 style={{ marginBottom: 8 }}>Vision</h3><p style={{ color: 'var(--gray-700)', lineHeight: 1.7 }}>{vision}</p></div>
                     </div>
                 </div>
             </section>
