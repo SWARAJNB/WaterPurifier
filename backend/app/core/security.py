@@ -1,33 +1,36 @@
 from datetime import datetime, timedelta
 from typing import Optional, Any, Union
-from jose import jwt
+from jose import jwt, JWTError, ExpiredSignatureError
 from app.core.config import settings
 
 ALGORITHM = "HS256"
 
-def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None) -> str:
+def create_access_token(subject: Union[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+    """Create JWT access token with expiry."""
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        # Default to settings or 1 day
-        expire = datetime.utcnow() + timedelta(days=1)
-        
+        expire = datetime.utcnow() + timedelta(days=7)
+    
     to_encode = {"exp": expire, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET, algorithm=ALGORITHM)
     return encoded_jwt
 
-from jose import jwt, JWTError, ExpiredSignatureError
-
 def verify_token(token: str) -> Optional[str]:
+    """Verify JWT token and return user ID if valid."""
     try:
+        # Remove "Bearer " prefix if present
+        if token.startswith("Bearer "):
+            token = token[7:]
+        
         decoded_token = jwt.decode(token, settings.JWT_SECRET, algorithms=[ALGORITHM])
-        return decoded_token["sub"]
+        user_id: str = decoded_token.get("sub")
+        if user_id is None:
+            return None
+        return user_id
     except ExpiredSignatureError:
-        print("Token has expired")
-        return None
+        raise ValueError("Token has expired")
     except JWTError:
-        print("Invalid token")
-        return None
+        raise ValueError("Invalid token")
     except Exception as e:
-        print(f"Token error: {e}")
-        return None
+        raise ValueError(f"Token error: {str(e)}")

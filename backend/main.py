@@ -1,6 +1,7 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 from app.core.config import settings
@@ -10,6 +11,11 @@ from app.models.order import Order
 from app.models.extras import Review, Booking, Service, Coupon, Offer
 from app.models.info import BusinessInfo
 from app.api_v1 import api_router
+import certifi
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="AquaPure API",
@@ -17,10 +23,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Include API V1 Router
-app.include_router(api_router, prefix="/api/v1")
-
-# CORS Middleware
+# CORS Middleware (should be added first)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
@@ -29,11 +32,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-import certifi
+# Global error handler
+@app.middleware("http")
+async def error_handler(request: Request, call_next):
+    try:
+        response = await call_next(request)
+        return response
+    except Exception as e:
+        logger.error(f"Error: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Internal server error", "error": str(e)}
+        )
+
+# Include API V1 Router
+app.include_router(api_router, prefix="/api/v1")
 
 @app.on_event("startup")
 async def startup_event():
-    print(f"📡 Connecting to MongoDB: {settings.MONGODB_URI.split('@')[-1]}") # Log safe part of URI
+    """Initialize database connection on startup."""
+    logger.info(f"📡 Connecting to MongoDB")
     client = AsyncIOMotorClient(
         settings.MONGODB_URI,
         tlsCAFile=certifi.where()
@@ -41,9 +59,9 @@ async def startup_event():
     try:
         # Verify connection
         await client.admin.command('ping')
-        print("✅ Successfully connected to MongoDB Atlas")
+        logger.info("✅ Successfully connected to MongoDB Atlas")
     except Exception as e:
-        print(f"❌ MongoDB Connection Error: {e}")
+        logger.error(f"❌ MongoDB Connection Error: {e}")
         raise e
 
     await init_beanie(
@@ -60,14 +78,25 @@ async def startup_event():
             BusinessInfo
         ]
     )
-    print(f"🚀 FastAPI running in {settings.NODE_ENV} mode")
+    logger.info(f"🚀 FastAPI running in {settings.NODE_ENV} mode on port {settings.PORT}")
 
-@app.get("/api/health")
+@app.get("/health")
 async def health_check():
+    """Health check endpoint."""
     return {
         "status": "OK",
-        "message": "AquaPure API Running (Python)",
-        "environment": settings.NODE_ENV
+        "message": "AquaPure API Running ✅",
+        "environment": settings.NODE_ENV,
+        "version": "1.0.0"
+    }
+
+@app.get("/")
+async def root():
+    """Root endpoint."""
+    return {
+        "message": "Welcome to AquaPure API",
+        "docs": "/docs",
+        "version": "1.0.0"
     }
 
 if __name__ == "__main__":
