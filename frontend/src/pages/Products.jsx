@@ -28,14 +28,17 @@ export default function Products() {
         page: Number(searchParams.get('page')) || 1
     });
 
-    useEffect(() => { getBrands().then(r => setBrands(r.data)).catch(() => { }); }, []);
+    useEffect(() => { getBrands().then(r => setBrands(r.data?.data || r.data)).catch(() => { }); }, []);
 
     useEffect(() => {
         setLoading(true);
         const params = {};
         Object.entries(filters).forEach(([k, v]) => { if (v) params[k] = v; });
         getProducts(params).then(r => {
-            setProducts(r.data.products); setTotal(r.data.total); setPages(r.data.pages);
+            const payload = r.data || {};
+            setProducts(payload.data || []);
+            setTotal(payload.pagination?.total || 0);
+            setPages(payload.pagination?.pages || 1);
         }).catch(() => { }).finally(() => setLoading(false));
     }, [filters]);
 

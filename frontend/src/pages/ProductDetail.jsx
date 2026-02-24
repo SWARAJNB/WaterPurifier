@@ -24,7 +24,11 @@ export default function ProductDetail() {
     useEffect(() => {
         setLoading(true);
         Promise.all([getProduct(id), getReviews(id), getBusinessInfo()])
-            .then(([pRes, rRes, iRes]) => { setProduct(pRes.data); setReviews(rRes.data); setInfo(iRes.data); })
+            .then(([pRes, rRes, iRes]) => {
+                setProduct(pRes.data?.data || pRes.data);
+                setReviews(rRes.data?.data || rRes.data || []);
+                setInfo(iRes.data?.data || iRes.data || null);
+            })
             .catch(() => toast.error('Failed to load product'))
             .finally(() => setLoading(false));
     }, [id]);
