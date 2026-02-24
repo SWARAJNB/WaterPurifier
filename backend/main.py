@@ -78,6 +78,19 @@ async def startup_event():
             BusinessInfo
         ]
     )
+
+    # seed demo products if none exist
+    try:
+        count = await Product.count()
+        if count == 0:
+            logger.info("🛠️  No products found in database, running seeder...")
+            # import here to avoid circular imports at module load time
+            from seed_products import seed_products
+            await seed_products()
+            logger.info("✅ Demo products seeded automatically")
+    except Exception as e:
+        logger.warning(f"⚠️  Could not seed products: {e}")
+
     logger.info(f"🚀 FastAPI running in {settings.NODE_ENV} mode on port {settings.PORT}")
 
 @app.get("/health")

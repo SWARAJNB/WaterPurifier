@@ -68,11 +68,15 @@ WHATSAPP_NUMBER=919999999999
 ```
 
 ### Step 5: Seed Demo Data
+
+The backend will automatically populate demo products and the two demo users on first startup if the database is empty. You can run the following command manually when developing or to reseed:
+
 ```bash
 python seed_products.py
 ```
 
-This creates:
+This script performs the same actions:
+
 - 15 demo water purifier products
 - Admin user: `admin@aquapure.com` / `admin123`
 - Regular user: `user@aquapure.com` / `user123`

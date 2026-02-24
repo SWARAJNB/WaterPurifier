@@ -138,6 +138,8 @@ npm run dev
 - **Admin:** `admin@aquapure.com` / `admin123`
 - **User:** `user@aquapure.com` / `user123`
 
+> 🛠 **Note:** When the backend starts, it automatically inserts a set of demo products if the database is empty. You only need to run `python seed_products.py` manually during development or if you clear the database.
+
 ### 📍 Access Points
 - **Backend API:** http://localhost:5000
 - **API Documentation:** http://localhost:5000/docs
