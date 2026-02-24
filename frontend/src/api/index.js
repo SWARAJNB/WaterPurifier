@@ -28,10 +28,12 @@ export const syncCart = (items) => API.post('/user/cart/sync', items);
 // Products
 export const getProducts = (params) => API.get('/products', { params });
 export const getProduct = (id) => API.get(`/products/${id}`);
+export const getBrands = () => API.get('/products/brands');
 
 // Services
 export const getServices = () => API.get('/services');
 export const bookService = (data) => API.post('/services/book', data);
+export const submitContact = (data) => API.post('/info/contact', data);
 
 // Reviews
 export const getReviews = (productId) => API.get(`/reviews/${productId}`);

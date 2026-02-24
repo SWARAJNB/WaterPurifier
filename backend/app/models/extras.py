@@ -58,3 +58,14 @@ class Offer(Document):
 
     class Settings:
         name = "offers"
+
+class ContactMessage(Document):
+    name: str
+    email: str
+    phone: Optional[str] = None
+    subject: str
+    message: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Settings:
+        name = "contact_messages"

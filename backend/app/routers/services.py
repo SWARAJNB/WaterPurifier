@@ -4,7 +4,7 @@ from app.routers.auth import get_current_user
 from app.models.user import User
 from typing import List
 
-router = APIRouter(prefix="/api/services", tags=["services"])
+router = APIRouter(prefix="/services", tags=["services"])
 
 @router.get("/")
 async def get_services():

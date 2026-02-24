@@ -1,10 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.models.info import BusinessInfo
+from app.models.extras import ContactMessage
 from app.models.user import User
 from app.routers.auth import get_current_user
 from datetime import datetime
 
 router = APIRouter(prefix="/info", tags=["info"])
+
+@router.post("/contact")
+async def submit_contact(message: ContactMessage):
+    await message.insert()
+    return {"message": "Thank you for contacting us. We will get back to you soon!"}
 
 @router.get("/")
 async def get_business_info():

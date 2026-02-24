@@ -45,6 +45,10 @@ async def get_products(
         "pages": (total + limit - 1) // limit,
         "total": total
     }
+@router.get("/brands", response_model=List[str])
+async def get_brands():
+    brands = await Product.distinct("brand")
+    return brands
 
 @router.get("/{id}", response_model=ProductResponse)
 async def get_product(id: str):
