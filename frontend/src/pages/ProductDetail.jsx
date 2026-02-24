@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FiStar, FiShoppingCart, FiHeart, FiCheck, FiX } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
-import { getProduct, getReviews, createReview } from '../api';
+import { getProduct, getReviews, createReview, getBusinessInfo } from '../api';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
