@@ -86,8 +86,8 @@ export const createRazorpayOrder = (amount) => API.post('/payments/create-order'
 export const verifyPayment = (data) => API.post('/payments/verify', data);
 
 // ============ INFO ENDPOINTS ============
-export const getBusinessInfo = () => API.get('/info/business');
-export const updateBusinessInfo = (data) => API.put('/info/business', data);
+export const getBusinessInfo = () => API.get('/info');
+export const updateBusinessInfo = (data) => API.put('/info', data);
 export const submitContact = (data) => API.post('/info/contact', data);
 
 // ============ ADMIN ENDPOINTS ============
@@ -95,19 +95,8 @@ export const getDashboardStats = () => API.get('/admin/stats');
 export const getAllOrders = (params) => API.get('/admin/orders', { params });
 export const getAllUsers = (params) => API.get('/admin/users', { params });
 export const updateUserRole = (userId, role) => API.put(`/admin/users/${userId}/role`, { role });
-export const validateCoupon = (data) => API.post('/coupons/validate', data);
-
-// Company Info
-export const getBusinessInfo = () => API.get('/info');
-export const updateBusinessInfo = (data) => API.put('/info', data);
-
-// Admin
-export const getAdminDashboard = () => API.get('/admin/dashboard');
-export const createProduct = (data) => API.post('/products', data, { headers: { 'Content-Type': 'multipart/form-data' } });
-export const updateProduct = (id, data) => API.put(`/products/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
-export const deleteProduct = (id) => API.delete(`/products/${id}`);
-export const getAdminOrders = () => API.get('/orders');
 export const updateOrderStatus = (id, status) => API.put(`/orders/${id}/status`, { status });
 export const getAdminServices = () => API.get('/services');
+export const validateCoupon = (data) => API.post('/coupons/validate', data);
 
 export default API;
